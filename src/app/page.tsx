@@ -36,16 +36,8 @@ export default function Home() {
 
   const exampleFiles = [
     {
-      name: '第0节 开班典礼',
-      url: 'https://coze-coding-project.tos.coze.site/create_attachment/2026-03-16/2913052805040515_8076e8ff9711c5c8c1ee575f11e922cb_%E7%AC%AC0%E8%8A%82%20%E5%BC%80%E7%8F%AD%E5%85%B8%E7%A4%BC.pdf?sign=4895726785-7ae02dd211-0-9821fb93d2ba21c3ef5556c4128f5ea8f74313f8e646b2a08421fa8e1aeaa32d'
-    },
-    {
-      name: '第1节 提示词和RAG',
-      url: 'https://coze-coding-project.tos.coze.site/create_attachment/2026-03-16/2913052805040515_87575518a8bf61b18828a4c6c8f32baa_%E7%AC%AC1%E8%8A%82%20%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%92%8CRAG.pdf?sign=4895726785-0cdcc69fbd-0-2b7291722a1fdb4b9fd21e0f4fc8b93142cb41a2da6ea455eddd52c3355fbffc'
-    },
-    {
-      name: '第2节 Agent',
-      url: 'https://coze-coding-project.tos.coze.site/create_attachment/2026-03-16/2913052805040515_b56bed020feee5f1d01eab3f3eaf7dbd_%E7%AC%AC2%E8%8A%82%20Agent.pdf?sign=4895726785-1f86b0baeb-0-1ee89687a9b083731c8f5196bdf81105bb881ae26c00e288370d1f0e70a119d9'
+      name: '征服者T-配置+图片',
+      url: 'https://code.coze.cn/api/sandbox/coze_coding/file/proxy?expire_time=-1&file_path=assets%2F%E5%BE%81%E6%9C%8D%E8%80%85T-%E9%85%8D%E7%BD%AE%2B%E5%9B%BE%E7%89%87.pdf&nonce=c3fb9c92-c6e9-4dfd-ad4f-df2c6561e507&project_id=7617817295271903272&sign=f0d73f4921224b573dd1030986d1f7a43a17c196c1870bd835f6e9acee3f1066'
     }
   ];
 
@@ -322,7 +314,7 @@ export default function Home() {
                   <FileText className="h-4 w-4" />
                   <AlertDescription className="flex items-center justify-between">
                     <span className="text-sm">
-                      点击下方按钮快速加载 3 个示例 PDF 文件进行测试
+                      点击下方按钮快速加载示例 PDF 文件进行测试
                     </span>
                     <Button 
                       size="sm" 

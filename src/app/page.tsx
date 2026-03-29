@@ -123,6 +123,7 @@ export default function Home() {
     try {
       // 使用 pdfjs-dist 的 legacy 版本以获得更好的兼容性
       const pdfjsLib = await import('pdfjs-dist/legacy/build/pdf.mjs');
+      const { PDFDocument } = await import('pdf-lib');
       
       // 使用本地的 worker 文件
       pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
@@ -151,6 +152,9 @@ export default function Home() {
           // 为每个PDF创建文件夹
           const folder = zip.folder(pdfFile.name);
           if (!folder) throw new Error('无法创建文件夹');
+          
+          // 创建新的 PDF 文档（用于保存去水印后的PDF）
+          const newPdfDoc = await PDFDocument.create();
           
           // 处理每一页
           for (let pageNum = 1; pageNum <= numPages; pageNum++) {
@@ -234,12 +238,28 @@ export default function Home() {
             const fileName = `${pdfFile.name}_${pageNumStr}.png`;
             folder.file(fileName, blob);
             
+            // 将去水印后的图片添加到新PDF中
+            const pngImageBytes = await blob.arrayBuffer();
+            const pngImage = await newPdfDoc.embedPng(pngImageBytes);
+            const newPage = newPdfDoc.addPage([viewport.width, viewport.height]);
+            newPage.drawImage(pngImage, {
+              x: 0,
+              y: 0,
+              width: viewport.width,
+              height: viewport.height,
+            });
+            
             // 更新进度
             const progress = Math.round((pageNum / numPages) * 100);
             setPdfFiles(prev => prev.map((f, idx) => 
               idx === i ? { ...f, progress, pageCount: numPages } : f
             ));
           }
+          
+          // 保存去水印后的PDF并添加到ZIP
+          setCurrentTask(`正在生成: ${pdfFile.name}_已去水印.pdf`);
+          const newPdfBytes = await newPdfDoc.save();
+          folder.file(`${pdfFile.name}_已去水印.pdf`, newPdfBytes);
           
           setPdfFiles(prev => prev.map((f, idx) => 
             idx === i ? { ...f, status: 'completed', progress: 100 } : f
@@ -476,7 +496,7 @@ export default function Home() {
                 <Alert>
                   <CheckCircle2 className="h-4 w-4" />
                   <AlertDescription className="text-sm">
-                    处理完成后，系统将自动下载一个 ZIP 压缩包。每个 PDF 文件会在压缩包内生成一个独立文件夹，图片命名格式为：PDF文件名_01.png、PDF文件名_02.png 等。
+                    处理完成后，系统将自动下载一个 ZIP 压缩包。每个 PDF 文件会在压缩包内生成一个独立文件夹，包含：去水印后的图片（PDF文件名_01.png）和去水印后的PDF文件（PDF文件名_已去水印.pdf）。
                   </AlertDescription>
                 </Alert>
               </div>
@@ -504,7 +524,7 @@ export default function Home() {
             </div>
             <div className="flex gap-3">
               <span className="font-bold text-foreground">4.</span>
-              <span>解压后每个 PDF 对应一个文件夹，图片命名格式：PDF文件名_页码.png</span>
+              <span>解压后每个 PDF 对应一个文件夹，包含：去水印后的图片（PDF文件名_01.png）和去水印后的PDF（PDF文件名_已去水印.pdf）</span>
             </div>
             <div className="flex gap-3">
               <span className="font-bold text-foreground">5.</span>
